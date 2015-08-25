@@ -1,11 +1,14 @@
 package furb.linguagensFormais.styles;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class RecognizerBehaviorsComponents extends JFrame{
@@ -27,7 +30,22 @@ public class RecognizerBehaviorsComponents extends JFrame{
 		}
 		textAreaRecognizer.setBorder(new NumberedBorder());
 		textAreaRecognizer.setMaximumSize(new Dimension(864,187));
+		
+		JScrollPane scr = new JScrollPane(textAreaRecognizer, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		return textAreaRecognizer;
+	}
+	
+	public JScrollPane getTextAreaRecognizerScroll() {
+		if (textAreaRecognizer == null) {
+			setTextAreaRecognizer(new JTextArea());
+		}
+		textAreaRecognizer.setBorder(new NumberedBorder());
+		textAreaRecognizer.setMaximumSize(new Dimension(864,187));
+		
+		JScrollPane scr = new JScrollPane(textAreaRecognizer, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		return scr;
 	}
 
 	public void setTextAreaRecognizer(JTextArea textAreaRecognizer) {
@@ -53,10 +71,13 @@ public class RecognizerBehaviorsComponents extends JFrame{
 		if (btnAnalyze == null) {
 			setBtnAnalyze(new JButton(BTN_ANALYZER,new ImageIcon("play.png")));
 		}
-		btnAnalyze.setSize(400,50);
+		btnAnalyze.setSize(50, 50);
 		Dimension d = btnAnalyze.getPreferredSize();
 		d.width = 32767;
 		btnAnalyze.setMaximumSize( d );
+		
+		ImageIcon icone = getResizedIcon(new ImageIcon("C:/Users/Matheus N. Nienow/Desktop/analisar.png"), 15, 15);				
+		btnAnalyze.setIcon(icone);
 		
 		return btnAnalyze;
 	}
@@ -69,7 +90,11 @@ public class RecognizerBehaviorsComponents extends JFrame{
 		if (btnClean == null) {
 			setBtnClean(new JButton(BTN_CLEAN));
 		}
-		btnClean.setSize(100,50);
+		btnClean.setSize(50,50);
+
+		ImageIcon icone = getResizedIcon(new ImageIcon("C:/Users/Matheus N. Nienow/Desktop/limpar.png"), 15, 15);	
+		btnClean.setIcon(icone);
+		
 		return btnClean;
 	}
 
@@ -81,12 +106,23 @@ public class RecognizerBehaviorsComponents extends JFrame{
 		if (btnTeam == null) {
 			setBtnTeam(new JButton(BTN_TEAM));
 		}
-		btnTeam.setSize(100,50);
+		btnTeam.setSize(50,50);
+		ImageIcon icone = getResizedIcon(new ImageIcon("C:/Users/Matheus N. Nienow/Desktop/grupo.png"), 15, 15);	
+		btnTeam.setIcon(icone);
+		
 		return btnTeam;
 	}
 
 	public void setBtnTeam(JButton btnTeam) {
 		this.btnTeam = btnTeam;
+	}
+	
+	private ImageIcon getResizedIcon(ImageIcon icone, int widht, int height){
+		Image img = icone.getImage();
+		Image newimg = img.getScaledInstance(widht, height,  java.awt.Image.SCALE_SMOOTH);
+		ImageIcon newIcon = new ImageIcon(newimg);
+		
+		return newIcon;
 	}
 
 }
