@@ -2,26 +2,38 @@ package furb.linguagensFormais.reconhecedor;
 
 public class Interpretador {
 	public static final String CARACTER_INVALIDO= "erro: símbolo(s) inválidos";
-	public static final String PALAVRA_INVALIDA= "erro: palavra inválida";
+	public static final String PALAVRA_INVALIDA= "palavra inválida";
 	public static final String PALAVRA_VALIDA= "palavra válida";
 	private static boolean isAvaliable = false;
 	private static String caminhoPercorrido = "";
+	private static String sequenciaLetras = "";
 
 	public static String[] avaliaPalavra(String palavra){
+		caminhoPercorrido = "";
+		sequenciaLetras = "";
+		
 		TabelaAFN tabelaPopulada = BOTabelaAFN.getTabelaPopulada();
 		if (isSomenteCaracteresValidados(palavra, tabelaPopulada.getUniverso())) {
 			avaliaPalavra(tabelaPopulada, palavra, 0, 0);
 			if (isAvaliable) {
 				isAvaliable = false;
-				return new String[]{PALAVRA_VALIDA, caminhoPercorrido};
+				return new String[]{PALAVRA_VALIDA, caminhoPercorrido, getSequenciaLetras()};
 			}else{
-				return new String[]{PALAVRA_INVALIDA, caminhoPercorrido};
+				return new String[]{PALAVRA_INVALIDA, caminhoPercorrido, getSequenciaLetras()};
 			}
 		}
 		caminhoPercorrido = caminhoPercorrido + "qErro";
-		return new String[]{CARACTER_INVALIDO, caminhoPercorrido};
+		return new String[]{CARACTER_INVALIDO, caminhoPercorrido, getSequenciaLetras()};
 	}
 
+	private static String getSequenciaLetras(){
+		if (sequenciaLetras.length() > 0){
+			return sequenciaLetras.substring(0, sequenciaLetras.length()-1);
+		}
+		
+		return "";
+	}
+	
 	private static boolean isSomenteCaracteresValidados(String palavra, char[] letrasAceitas){
 		for (char caracter : letrasAceitas) {
 			palavra = palavra.replaceAll(String.valueOf(caracter),"");
@@ -32,6 +44,7 @@ public class Interpretador {
 	private static void avaliaPalavra(TabelaAFN tab, String palavra,int indicePalavra, int indiceTabela){
 		if (palavra.length()  > indicePalavra) {
 			char caracter = palavra.charAt(indicePalavra);
+			sequenciaLetras += caracter+",";
 			indicePalavra ++;
 			int[] posicoes = null;
 			switch (caracter) {

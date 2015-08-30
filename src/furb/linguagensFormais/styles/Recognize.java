@@ -12,10 +12,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import furb.linguagensFormais.reconhecedor.Interpretador;
+
 public class Recognize extends RecognizerBehaviorsComponents implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-
+	private JTable tabela;
 	public Recognize() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -24,28 +26,12 @@ public class Recognize extends RecognizerBehaviorsComponents implements ActionLi
 		Container pane = getContentPane();
 		// pane.setLayout(new BorderLayout(10,20));
 
-		String[] colunas = new String[] { "linha", "resultado", "sequência", "reconhecimento" };
-		String[][] dados = new String[][] { { "1", "resultado 1", "1", "reconhecimento 1" },
-				{ "2", "resultado 2", "2", "reconhecimento 2" }, 
-				{ "2", "resultado 2", "2", "reconhecimento 2" },
-				{ "2", "resultado 2", "2", "reconhecimento 2" }, 
-				{ "2", "resultado 2", "2", "reconhecimento 2" },
-				{ "2", "resultado 2", "2", "reconhecimento 2" }, 
-				{ "2", "resultado 2", "2", "reconhecimento 2" },
-				{ "2", "resultado 2", "2", "reconhecimento 2" }, 
-				{ "2", "resultado 2", "2", "reconhecimento 2" }, };
-
-
-		JTable tabela = new JTable();
-		DefaultTableModel model = new DefaultTableModel(dados, colunas);
-		tabela.setModel(model);
-
-		JScrollPane scroll = new JScrollPane(tabela, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+		JScrollPane scroll = new JScrollPane(getTable(), JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBar(new JScrollBar());
 		scroll.setVerticalScrollBar(new JScrollBar());
-		//tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		
+		// tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
 		GridBagLayout layout = new GridBagLayout();
 		setLayout(layout);
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -74,9 +60,9 @@ public class Recognize extends RecognizerBehaviorsComponents implements ActionLi
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-
+	public void actionPerformed(ActionEvent e) {
+		
+		
 	}
 
 }
