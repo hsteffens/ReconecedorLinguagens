@@ -5,20 +5,19 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 import furb.linguagensFormais.reconhecedor.Interpretador;
-import furb.linguagensFormais.testes.InterpretadorTest;
 
 public class RecognizerBehaviorsComponents extends JFrame implements ActionListener {
 
@@ -85,7 +84,7 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 			btnAnalyze.setMaximumSize(d);
 			btnAnalyze.addActionListener(new ButtonListener());
 
-			ImageIcon icone = getResizedIcon(new ImageIcon("C:/Users/Matheus N. Nienow/Desktop/analisar.png"), 15, 15);
+			ImageIcon icone = getResizedIcon(new ImageIcon("./src/analisar.png"), 15, 15);
 			btnAnalyze.setIcon(icone);
 		}
 
@@ -101,8 +100,7 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 			setBtnClean(new JButton(BTN_CLEAN));
 
 			btnClean.setSize(50, 50);
-
-			ImageIcon icone = getResizedIcon(new ImageIcon("C:/Users/Matheus N. Nienow/Desktop/limpar.png"), 15, 15);
+			ImageIcon icone = getResizedIcon(new ImageIcon("./src/limpar.png"), 15, 15);
 			btnClean.setIcon(icone);
 			btnClean.addActionListener(new ButtonListener());
 		}
@@ -118,7 +116,7 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 		if (btnTeam == null) {
 			setBtnTeam(new JButton(BTN_TEAM));
 			btnTeam.setSize(50, 50);
-			ImageIcon icone = getResizedIcon(new ImageIcon("C:/Users/Matheus N. Nienow/Desktop/grupo.png"), 15, 15);
+			ImageIcon icone = getResizedIcon(new ImageIcon("./src/grupo.png"), 15, 15);
 			btnTeam.setIcon(icone);
 			btnTeam.addActionListener(new ButtonListener());
 		}
