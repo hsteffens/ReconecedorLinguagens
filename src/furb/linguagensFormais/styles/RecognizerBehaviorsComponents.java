@@ -3,9 +3,11 @@ package furb.linguagensFormais.styles;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -15,9 +17,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 
 import furb.linguagensFormais.reconhecedor.Interpretador;
+import furb.linguagensFormais.reconhecedor.Palavra;
 
 public class RecognizerBehaviorsComponents extends JFrame implements ActionListener {
 
@@ -32,6 +36,7 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 	private JButton btnClean;
 	private JButton btnTeam;
 	private JTable tabela;
+	private JScrollPane tabelaScroll;
 	private JScrollPane textAreaRecognizerScroll;
 	private DefaultTableModel model;
 	private int linha = 1;
@@ -84,7 +89,8 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 			btnAnalyze.setMaximumSize(d);
 			btnAnalyze.addActionListener(new ButtonListener());
 
-			ImageIcon icone = getResizedIcon(new ImageIcon("./src/analisar.png"), 15, 15);
+			//ImageIcon icone = getResizedIcon(new ImageIcon("./src/analisar.png"), 15, 15);
+			ImageIcon icone = getResizedIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/analisar2.png"))), 15, 15);
 			btnAnalyze.setIcon(icone);
 		}
 
@@ -100,7 +106,9 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 			setBtnClean(new JButton(BTN_CLEAN));
 
 			btnClean.setSize(50, 50);
-			ImageIcon icone = getResizedIcon(new ImageIcon("./src/limpar.png"), 15, 15);
+			//ImageIcon icone = getResizedIcon(new ImageIcon("./src/limpar.png"), 15, 15);
+			ImageIcon icone = getResizedIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/limpar2.png"))), 15, 15);
+			
 			btnClean.setIcon(icone);
 			btnClean.addActionListener(new ButtonListener());
 		}
@@ -116,7 +124,8 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 		if (btnTeam == null) {
 			setBtnTeam(new JButton(BTN_TEAM));
 			btnTeam.setSize(50, 50);
-			ImageIcon icone = getResizedIcon(new ImageIcon("./src/grupo.png"), 15, 15);
+			ImageIcon icone = getResizedIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/grupo2.png"))), 15, 15);
+			//ImageIcon icone = getResizedIcon(new ImageIcon("./src/grupo.png"), 15, 15);
 			btnTeam.setIcon(icone);
 			btnTeam.addActionListener(new ButtonListener());
 		}
@@ -140,10 +149,48 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 
 			tabela = new JTable();
 			model = getModel();
+
 			tabela.setModel(model);
+			tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			tabela.setEnabled(false);
+			tabela.setPreferredSize(new Dimension(864, 173));
+			tabela.setMaximumSize(new Dimension(864, 173));
+
+			DefaultTableColumnModel colModel = (DefaultTableColumnModel) tabela.getColumnModel();
+			colModel.getColumn(0).setPreferredWidth(80);
+			colModel.getColumn(1).setPreferredWidth(200);
+			colModel.getColumn(2).setPreferredWidth(150);
+			colModel.getColumn(3).setPreferredWidth(434);
 		}
 
 		return tabela;
+	}
+
+	public JTable getTableClear() {
+		model = getModel();
+
+		tabela.setModel(model);
+		tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		tabela.setEnabled(false);
+
+		DefaultTableColumnModel colModel = (DefaultTableColumnModel) tabela.getColumnModel();
+		colModel.getColumn(0).setPreferredWidth(80);
+		colModel.getColumn(1).setPreferredWidth(200);
+		colModel.getColumn(2).setPreferredWidth(150);
+		colModel.getColumn(3).setPreferredWidth(434);
+
+		return tabela;
+	}
+
+	public JScrollPane getTableScroll() {
+		if (tabelaScroll == null) {
+			tabelaScroll = new JScrollPane(getTable(), JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+					JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+			tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		}
+
+		return tabelaScroll;
 	}
 
 	private DefaultTableModel getModel() {
@@ -164,29 +211,17 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 	}
 
 	private void actionInterpretar() {
-		String[] resultado;
 		if (textAreaRecognizer.getText() != null) {
-			resultado = Interpretador.avaliaPalavra(textAreaRecognizer.getText().toString());
-		} else {
-			resultado = Interpretador.avaliaPalavra("");
-		}
-
-		setResultado(resultado);
-	}
-
-	private void setResultado(String[] resultado) {
-		DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
-
-		for (int i = 0; i < modelo.getRowCount(); i++) {
-			if (modelo.getValueAt(i, 0).equals("")) {
-				modelo.insertRow(i, new Object[] { linha, resultado[0], resultado[2], resultado[1] });
-				linha++;
-				return;
+			List<Palavra> textoAvaliado = getTextoAvaliado(textAreaRecognizer.getText().toString());
+			for (Palavra palavra : textoAvaliado) {
+				String[] resultados = new String[3];
+				resultados[0] = palavra.getResultado();
+				resultados[1] = palavra.getSequencia();
+				resultados[2] = palavra.getReconhecimento();
+				setResultado(resultados);
 			}
 		}
 
-		modelo.addRow(new Object[] { linha, resultado[0], resultado[1] });
-		linha++;
 	}
 
 	private void showInfo() {
@@ -194,14 +229,15 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 		msg.append("Trabalho desenvolvido por ");
 		msg.append("Héliton Steffens e ");
 		msg.append("Matheus Navarro Nienow");
-		msg.append("\npelo curso Bacharelado em Ciência da Computação da Universidade Regional de Blumenau - FURB.");
+		msg.append("\nna disciplina de Linguagens Formais, lecionada pela professora Joyce Martins,");
+		msg.append("\nno curso Bacharelado em Ciência da Computação da Universidade Regional de Blumenau - FURB.");
 
 		JOptionPane.showMessageDialog(this, msg.toString());
 	}
-	
-	private void limpar(){
+
+	private void limpar() {
 		textAreaRecognizer.setText("");
-		tabela.setModel(getModel());
+		tabela = getTableClear();
 	}
 
 	class ButtonListener implements ActionListener {
@@ -219,4 +255,46 @@ public class RecognizerBehaviorsComponents extends JFrame implements ActionListe
 		}
 	}
 
+	private void setResultado(String[] resultado) {
+		DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
+
+		for (int i = 0; i < modelo.getRowCount(); i++) {
+			if (modelo.getValueAt(i, 0).equals("")) {
+				modelo.insertRow(i, new Object[] { linha, resultado[0], resultado[1], resultado[2] });
+				linha++;
+				return;
+			}
+		}
+
+		modelo.addRow(new Object[] { linha, resultado[0], resultado[1], resultado[2] });
+		linha++;
+	}
+
+	private List<Palavra> getTextoAvaliado(String textoAvaliado) {
+		ArrayList<Palavra> lPalavra = new ArrayList<>();
+		String palavra = "";
+		for (char caracter : textoAvaliado.toCharArray()) {
+			if (caracter != ' ' && caracter != '\n') {
+				palavra = palavra + caracter;
+			} else if (caracter == '\n' || caracter == ' ') {
+				if (!palavra.isEmpty()) {
+					lPalavra.add(getPalavraAvaliada(palavra, linha));
+				}
+				palavra = "";
+			}
+		}
+		if (!palavra.isEmpty()) {
+			lPalavra.add(getPalavraAvaliada(palavra, linha));
+		}
+		return lPalavra;
+	}
+
+	private Palavra getPalavraAvaliada(String palavra, int linha) {
+		Palavra objeto = new Palavra();
+		objeto.setSequencia(palavra);
+		String[] avaliaPalavra = Interpretador.avaliaPalavra(palavra);
+		objeto.setResultado(avaliaPalavra[0]);
+		objeto.setReconhecimento(avaliaPalavra[1]);
+		return objeto;
+	}
 }
